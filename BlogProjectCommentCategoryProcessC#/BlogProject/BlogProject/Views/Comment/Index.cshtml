@@ -1,0 +1,30 @@
+﻿
+@model List<BlogProject.ViewModels.CommentViewModel>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Username</th>
+            <th>Comment Name</th>
+            <th>Description</th>
+            <th>Blog Name</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var comment in Model)
+        {
+            <tr>
+                <td>@comment.Username</td>
+                <td>@comment.CommentName</td>
+                <td>@comment.CommentDescription</td>
+                <td>@comment.BlogName</td>
+            </tr>
+        }
+    </tbody>
+</table>

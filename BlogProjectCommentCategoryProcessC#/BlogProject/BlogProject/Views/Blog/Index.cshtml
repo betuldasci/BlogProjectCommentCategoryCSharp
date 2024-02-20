@@ -1,0 +1,143 @@
+﻿@using BlogProject.ViewModels;
+@model List<BlogViewModel>
+@{
+    ViewData["Title"] = "Index";
+    int i = 0;
+}
+
+<div class="container">
+    @if (TempData["Message"] != null)
+    {
+        <div class="alert alert-info mt-2">
+            @TempData["Message"]
+        </div>
+    }
+    <div class="row">
+
+        <div class="col-12">
+            <div class="card p-3">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h3>Blog List</h3>
+                    <a class="btn btn-success" href="~/Blog/Add"><i class="fa fa-plus"></i> Add Blog</a>
+                    <a class="btn btn-info" href="~/Comment/Index"><i class="fa fa-list"></i> Comment List</a>
+
+                </div>
+                <hr />
+         
+                <table class="table table-hover table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Username</th>
+                            <th>Short Description</th>
+                            <th class="text-center">Comment Count</th>
+                      
+                            <th class="text-center">Status</th>
+                            <th>Categories</th>
+                            <th>Settings</th>
+                            <th>Comments</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var blog in Model)
+                        {
+                            i++;
+                            <tr>
+                                <th>@i</th>
+                                <td>@blog.Name</td>
+                                <td>
+                                    <span class="badge bg-primary">
+                                        <i class="fa fa-user"></i> @blog.Username
+                                    </span>
+                                </td>
+                                <td>@blog.ShortDescription</td>
+                                <td class="text-center">
+                                    <span class="badge bg-warning">
+                                        @blog.CommentCount <i class="fa fa-comments"></i>
+                                    </span>
+                                </td>
+                              
+                                <td class="text-center">
+                                    <span class="badge bg-@(blog.IsStatus?"success":"danger")">
+                                        @(blog.IsStatus ? "Active" : "Passive")
+                                    </span>
+                                </td>
+                                <td>
+                                    @foreach (var category in blog.Categories)
+                                    {
+                                        <span class="badge bg-secondary m-1">
+                                            @category.Name
+                                        </span>
+                                    }
+
+                                </td>
+                                <td>
+                                    <a class="btn btn-primary me-2 btn-sm" href="~/Blog/Edit/@blog.Id"><i class="fa fa-cogs"></i> Edit</a>
+                                    <a class="btn btn-danger me-2 btn-sm" href="~/Blog/Delete/@blog.Id" data-toggle="modal" data-target="#confirmDeleteModal-@blog.Id">Delete</a>
+                            
+                                </td>
+                                <td>
+                                    @if (blog.Comments.Any())
+                                    {
+                                        @foreach (var comment in blog.Comments)
+                                        {
+                                            <div class="mb-2">
+                                                <strong>@comment.User.Username:</strong>
+                                                <br />
+                                                @comment.Description
+                                            </div>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <p>SQL'den bir yorum ekleyelimm bu bloga</p>
+                                    }
+                                </td>
+                            </tr>
+                            <div class="modal fade" id="confirmDeleteModal-@blog.Id" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">Blogu Sil</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            Bu blogu silmek istediğinize emin misiniz?
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Hayır</button>
+                                            <button type="button" class="btn btn-danger" onclick="deleteBlog(@blog.Id)" id="deleteConfirmBtn">Evet</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                    </tbody>
+                </table>
+
+                @section Scripts {
+                    <script>
+                        function deleteBlog(blogId) {
+                            var deleteUrl = '/Blog/Delete/' + blogId;
+                            window.location.href = deleteUrl;
+                        }
+
+                        $(document).ready(function () {
+                            $('.delete-btn').on('click', function () {
+                                var blogId = $(this).data('Id');
+                                var deleteUrl = '/Blog/Delete/' + blogId;
+                                $('#deleteConfirmBtn').attr('href', deleteUrl);
+                            });
+                        });
+                    </script>
+                }
+
+            </div>
+        </div>
+    </div>
+</div>
+

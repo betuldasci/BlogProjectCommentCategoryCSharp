@@ -1,0 +1,71 @@
+﻿@model BlogProject.ViewModels.BlogEditViewModel
+@{
+    ViewData["Title"] = "Edit";
+}
+
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-12">
+            <div class="card p-3">
+                <h3 class="text-center mb-4">Edit Blog</h3>
+                <hr />
+                <form method="post">
+                    <div class="form-group mb-3">
+                        <label for="blogName">Blog Name</label>
+                        <textarea asp-for="Blog.Name" id="blogName" class="form-control"></textarea>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label for="blogShortDescription">Short Description</label>
+                        <textarea asp-for="Blog.ShortDescription" id="blogShortDescription" class="form-control"></textarea>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label for="blogDescription">Description</label>
+                        <textarea asp-for="Blog.Description" id="blogDescription" class="form-control"></textarea>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label for="blogImage">Image URL</label>
+                        <input asp-for="Blog.Image" id="blogImage" class="form-control" />
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label for="categorySelect">Categories</label>
+                        <select asp-for="SelectedCategoryIds" asp-items="@(new SelectList(Model.AllCategories,"Id","Name"))" id="categorySelect" class="form-control" multiple="multiple"></select>
+                    </div>
+
+                    <input type="hidden" asp-for="Blog.Id" />
+
+                    <div class="form-group text-center">
+                        <input type="submit" class="btn btn-success" value="Update Blog" />
+                    </div>
+                </form>
+                <label style="color:orange">@ViewData["Message"]</label>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#blogName').summernote({
+                placeholder: 'Enter blog name here...',
+                toolbar: false, // Disables Summernote's toolbar
+                height: 100  // set editor height
+            });
+            $('#blogShortDescription').summernote({
+                placeholder: 'Enter short description here...',
+                height: 150  // set editor height
+            });
+            $('#blogDescription').summernote({
+                placeholder: 'Enter description here...',
+                height: 200  // set editor height
+            });
+        });
+    </script>
+}
+
+
